@@ -1,61 +1,136 @@
-# 😷 Real-Time Face Mask Detector
 
-A real-time system built with Python to detect whether a person is wearing a face mask. The application uses a deep learning model on a live webcam feed and triggers an audible alert if a person is not wearing a mask.
+# 😷 Face Mask Detector — Real-Time Detection with Live Alerts  
 
-## Demo
-*(Here you can add a GIF or a screenshot of your project in action!)*
+---
 
-![Demo GIF](link-to-your-gif.gif)
+## 🚀 Project Overview  
 
-## Features
-- **Real-Time Detection:** Identifies masks on live video streams from a webcam.
-- **Deep Learning Model:** Uses a fine-tuned MobileNetV2 model for high accuracy.
-- **Live Sound Alert:** Provides an audible 'beep' when a person without a mask is detected.
-- **Visual Feedback:** Draws bounding boxes around faces, colored green for "Mask" and red for "No Mask".
+This is a real-time face mask detection system that uses a deep learning model to identify whether a person is wearing a face mask.  
+It processes a **live video stream** from your webcam, draws **bounding boxes** around detected faces, and provides **instant visual and audible alerts** for compliance checks.
 
-## Technology Stack
-- **Language:** Python
-- **Libraries:**
-    - **TensorFlow / Keras:** For building and training the CNN model.
-    - **OpenCV:** For video capture and image processing.
-    - **Scikit-learn:** For splitting the dataset.
-    - **Playsound:** For the alert system.
-    - **Matplotlib:** For plotting training history.
+---
 
-## Installation & Usage
+## ✨ Key Features  
 
-Follow these steps to set up and run the project on your local machine.
+✅ **Real-Time Detection** — Instant feedback from live webcam feed  
+✅ **High Accuracy** — Powered by **MobileNetV2** and transfer learning  
+✅ **Visual Feedback** — Green box for masked faces, red box for unmasked faces  
+✅ **Audible Alerts** — Sound triggered for faces without masks (with cooldown)  
 
-1.  **Clone the repository:**
-    ```bash
-    git clone [https://github.com/YourUsername/Face-Mask-Detector.git](https://github.com/YourUsername/Face-Mask-Detector.git)
-    cd Face-Mask-Detector
-    ```
+---
 
-2.  **Create and activate a virtual environment:**
-    ```bash
-    python3 -m venv venv
-    source venv/bin/activate
-    ```
+## 🛠️ Technology Stack  
 
-3.  **Install dependencies:**
-    ```bash
-    pip install -r requirements.txt
-    ```
-    *(Note: We will create the requirements.txt file next)*
+| Technology      | Usage                               |
+|-----------------|-------------------------------------|
+| Python 3.8+     | Core programming language           |
+| TensorFlow + Keras | Deep learning model & training     |
+| OpenCV          | Real-time video capture + face detection |
+| MobileNetV2     | Pre-trained lightweight CNN backbone |
+| Scikit-learn    | Data preprocessing & splitting      |
+| NumPy + Matplotlib | Data manipulation & visualization  |
+| Playsound       | Plays audible alerts on detection    |
 
-4.  **Download the Dataset:**
-    Download the face mask dataset from [Kaggle](https://www.kaggle.com/datasets/omkargurav/face-mask-dataset) and place the contents into a `dataset` folder in the project root.
+---
 
-5.  **Train the Model (Optional):**
-    To train the model from scratch, run the training script. This will generate `face_mask_detector.h5` and `plot.png`.
-    ```bash
-    python train_model.py
-    ```
+## 🧠 Methodology  
 
-6.  **Run the Detector:**
-    Execute the main script to start the live detection from your webcam.
-    ```bash
-    python detect_mask_video.py
-    ```
-    Press 'q' to exit the application.
+### 1️⃣ Data Collection & Preprocessing  
+
+- Dataset: [Face Mask Dataset on Kaggle](https://www.kaggle.com/)  
+- Images resized to **224x224** pixels  
+- Preprocessing with `preprocess_input`  
+- Labels one-hot encoded (`with_mask` → `[1,0]`, `without_mask` → `[0,1]`)  
+
+### 2️⃣ Model Architecture & Training  
+
+- **Transfer Learning** with **MobileNetV2**  
+- Custom Head:
+  - `AveragePooling2D` → `Flatten` → `Dense(128, ReLU)` → `Dropout(0.5)` → `Dense(2, Softmax)`  
+- Base model layers frozen  
+- Optimizer: **Adam**  
+- Loss: **Binary Cross-Entropy**  
+- Training on Face Mask Dataset  
+
+### 3️⃣ Real-Time Detection Pipeline  
+
+- **Face Detection:** Haar Cascade Classifier  
+- **ROI Extraction:** Detected faces passed to trained model  
+- **Classification:** Model predicts `with_mask` or `without_mask`  
+- **Feedback:**  
+  - Bounding box color (green/red)  
+  - Label with confidence score  
+  - Audible alert when `without_mask` detected (cooldown enabled)  
+
+---
+
+## ⚙️ Installation & Usage  
+
+### Prerequisites  
+
+- Python 3.8+  
+- Git  
+
+### 🔥 Setup Instructions  
+
+#### 1️⃣ Clone the Repository  
+
+```bash
+git clone https://github.com/Ayushranjan11/Face-Mask-Detector.git
+cd Face-Mask-Detector
+```
+
+#### 2️⃣ Create Virtual Environment  
+
+```bash
+# macOS / Linux
+python3 -m venv venv
+source venv/bin/activate
+
+# Windows
+python -m venv venv
+.env\Scriptsctivate
+```
+
+#### 3️⃣ Install Dependencies  
+
+```bash
+pip install -r requirements.txt
+```
+
+#### 4️⃣ Download Dataset & Pre-trained Model  
+
+- Download the dataset from Kaggle and place it in the `dataset/` folder in the project root.  
+- The **Haar Cascade** file `haarcascade_frontalface_default.xml` is already included under `cascades/`.  
+
+#### 5️⃣ Run Real-Time Face Mask Detector  
+
+```bash
+python detect_mask_video.py
+```
+
+- A webcam window will open.  
+- Press **`q`** to quit.  
+
+#### 6️⃣ (Optional) Train the Model From Scratch  
+
+```bash
+python train_model.py
+```
+
+- Generates:
+  - `face_mask_detector.h5` — Trained model  
+  - `plot.png` — Training history visualization  
+
+---
+
+## 📈 Results  
+
+The model achieves **high accuracy** on the validation set after **20 epochs**.  
+The training plot shows no significant overfitting — training and validation accuracy curves are close.  
+
+<p align="center">
+  <img src="plot.png" alt="Training Plot" width="600"/>
+</p>
+
+
