@@ -129,8 +129,5 @@ python train_model.py
 The model achieves **high accuracy** on the validation set after **20 epochs**.  
 The training plot shows no significant overfitting — training and validation accuracy curves are close.  
 
-<p align="center">
-  <img src="plot.png" alt="Training Plot" width="600"/>
-</p>
 
 
